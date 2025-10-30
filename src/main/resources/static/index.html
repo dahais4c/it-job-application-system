@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT岗位求职记录系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn-secondary {
+            background-color: #27ae60;
+        }
+
+        .btn-secondary:hover {
+            background-color: #229954;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-info {
+            background-color: #9b59b6;
+        }
+
+        .btn-info:hover {
+            background-color: #8e44ad;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .close:hover {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IT岗位求职记录系统</h1>
+
+        <!-- 添加岗位卡片 -->
+        <div class="card">
+            <h2>添加岗位信息</h2>
+            <form id="addRoleForm">
+                <div class="form-group">
+                    <label for="companyName">企业名称：</label>
+                    <input type="text" id="companyName" name="companyName" required>
+                </div>
+                <div class="form-group">
+                    <label for="jobTitle">岗位名称：</label>
+                    <input type="text" id="jobTitle" name="jobTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="salary">薪资：</label>
+                    <input type="text" id="salary" name="salary" placeholder="例如：8k-15k">
+                </div>
+                <div class="form-group">
+                    <label for="requirements">具体要求：</label>
+                    <textarea id="requirements" name="requirements"></textarea>
+                </div>
+                <button type="submit">添加岗位</button>
+            </form>
+        </div>
+
+        <!-- 搜索岗位卡片 -->
+        <div class="card">
+            <h2>搜索岗位</h2>
+            <div class="search-container">
+                <div class="search-group">
+                    <label for="searchCompany">企业名称：</label>
+                    <input type="text" id="searchCompany" placeholder="输入企业名称搜索">
+                </div>
+                <div class="search-group">
+                    <label for="searchJob">岗位名称：</label>
+                    <input type="text" id="searchJob" placeholder="输入岗位名称搜索">
+                </div>
+                <div class="search-group">
+                    <label for="searchSalary">薪资范围：</label>
+                    <input type="text" id="searchSalary" placeholder="输入薪资范围搜索">
+                </div>
+                <div class="search-group" style="justify-content: flex-end;">
+                    <button id="btnSearch" class="btn-secondary">搜索</button>
+                    <button id="btnClearSearch" class="btn-info">清空搜索</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 岗位列表卡片 -->
+        <div class="card">
+            <h2>岗位列表</h2>
+            <div class="table-container">
+                <table id="roleTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>企业名称</th>
+                            <th>岗位名称</th>
+                            <th>薪资</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roleTableBody">
+                        <!-- 岗位数据将通过JavaScript动态加载 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑岗位模态框 -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑岗位信息</h3>
+                <span class="close" id="closeEditModal">&times;</span>
+            </div>
+            <form id="editRoleForm">
+                <input type="hidden" id="editId" name="id">
+                <div class="form-group">
+                    <label for="editCompanyName">企业名称：</label>
+                    <input type="text" id="editCompanyName" name="companyName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editJobTitle">岗位名称：</label>
+                    <input type="text" id="editJobTitle" name="jobTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="editSalary">薪资：</label>
+                    <input type="text" id="editSalary" name="salary" placeholder="例如：8k-15k">
+                </div>
+                <div class="form-group">
+                    <label for="editRequirements">具体要求：</label>
+                    <textarea id="editRequirements" name="requirements"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit">更新岗位</button>
+                    <button type="button" id="btnDeleteInEdit" class="btn-danger">删除岗位</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // API基础URL
+        const API_BASE_URL = '/jobapp/api/roles';
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载岗位列表
+            loadRoles();
+
+            // 表单提交事件
+            document.getElementById('addRoleForm').addEventListener('submit', handleAddRole);
+            document.getElementById('editRoleForm').addEventListener('submit', handleEditRole);
+
+            // 搜索按钮事件
+            document.getElementById('btnSearch').addEventListener('click', handleSearch);
+            document.getElementById('btnClearSearch').addEventListener('click', clearSearch);
+
+            // 模态框事件
+            document.getElementById('closeEditModal').addEventListener('click', closeEditModal);
+            document.getElementById('btnDeleteInEdit').addEventListener('click', handleDeleteInEditModal);
+            window.addEventListener('click', function(event) {
+                if (event.target === document.getElementById('editModal')) {
+                    closeEditModal();
+                }
+            });
+        });
+
+        // 加载所有岗位
+        function loadRoles() {
+            fetch(API_BASE_URL)
+                .then(response => response.json())
+                .then(data => {
+                    renderRoleTable(data);
+                })
+                .catch(error => {
+                    console.error('加载岗位失败:', error);
+                    alert('加载岗位失败，请稍后重试');
+                });
+        }
+
+        // 渲染岗位表格
+        function renderRoleTable(roles) {
+            const tableBody = document.getElementById('roleTableBody');
+            tableBody.innerHTML = '';
+
+            roles.forEach(role => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${role.id}</td>
+                    <td>${role.companyName}</td>
+                    <td>${role.jobTitle}</td>
+                    <td>${role.salary || '-'}</td>
+                    <td>${formatDateTime(role.createdTime)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button onclick="editRole(${role.id})" class="btn-secondary">编辑</button>
+                            <button onclick="deleteRole(${role.id})" class="btn-danger">删除</button>
+                            <button onclick="viewRoleDetails(${role.id})" class="btn-info">详情</button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // 处理添加岗位
+        function handleAddRole(event) {
+            event.preventDefault();
+
+            const roleData = {
+                companyName: document.getElementById('companyName').value,
+                jobTitle: document.getElementById('jobTitle').value,
+                salary: document.getElementById('salary').value,
+                requirements: document.getElementById('requirements').value
+            };
+
+            fetch(API_BASE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(roleData)
+            })
+            .then(response => response.json())
+            .then(() => {
+                // 重置表单
+                document.getElementById('addRoleForm').reset();
+                // 重新加载岗位列表
+                loadRoles();
+                alert('岗位添加成功！');
+            })
+            .catch(error => {
+                console.error('添加岗位失败:', error);
+                alert('添加岗位失败，请稍后重试');
+            });
+        }
+
+        // 编辑岗位
+        function editRole(id) {
+            fetch(`${API_BASE_URL}/${id}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('岗位不存在');
+                    return response.json();
+                })
+                .then(role => {
+                    // 填充编辑表单
+                    document.getElementById('editId').value = role.id;
+                    document.getElementById('editCompanyName').value = role.companyName;
+                    document.getElementById('editJobTitle').value = role.jobTitle;
+                    document.getElementById('editSalary').value = role.salary || '';
+                    document.getElementById('editRequirements').value = role.requirements || '';
+
+                    // 显示编辑模态框
+                    document.getElementById('editModal').style.display = 'flex';
+                })
+                .catch(error => {
+                    console.error('获取岗位信息失败:', error);
+                    alert('获取岗位信息失败，请稍后重试');
+                });
+        }
+
+        // 处理编辑岗位
+        function handleEditRole(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('editId').value;
+            const roleData = {
+                companyName: document.getElementById('editCompanyName').value,
+                jobTitle: document.getElementById('editJobTitle').value,
+                salary: document.getElementById('editSalary').value,
+                requirements: document.getElementById('editRequirements').value
+            };
+
+            fetch(`${API_BASE_URL}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(roleData)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('更新失败');
+                return response.json();
+            })
+            .then(() => {
+                // 关闭模态框
+                closeEditModal();
+                // 重新加载岗位列表
+                loadRoles();
+                alert('岗位更新成功！');
+            })
+            .catch(error => {
+                console.error('更新岗位失败:', error);
+                alert('更新岗位失败，请稍后重试');
+            });
+        }
+
+        // 删除岗位
+        function deleteRole(id) {
+            if (confirm('确定要删除这个岗位吗？')) {
+                fetch(`${API_BASE_URL}/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('删除失败');
+                    // 重新加载岗位列表
+                    loadRoles();
+                    alert('岗位删除成功！');
+                })
+                .catch(error => {
+                    console.error('删除岗位失败:', error);
+                    alert('删除岗位失败，请稍后重试');
+                });
+            }
+        }
+
+        // 查看岗位详情
+        function viewRoleDetails(id) {
+            fetch(`${API_BASE_URL}/${id}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('岗位不存在');
+                    return response.json();
+                })
+                .then(role => {
+                    alert(`岗位详情：\n` +
+                          `ID: ${role.id}\n` +
+                          `企业名称: ${role.companyName}\n` +
+                          `岗位名称: ${role.jobTitle}\n` +
+                          `薪资: ${role.salary || '-'}\n` +
+                          `具体要求: ${role.requirements || '-'}\n` +
+                          `创建时间: ${formatDateTime(role.createdTime)}\n` +
+                          `更新时间: ${formatDateTime(role.updatedTime)}`);
+                })
+                .catch(error => {
+                    console.error('获取岗位详情失败:', error);
+                    alert('获取岗位详情失败，请稍后重试');
+                });
+        }
+
+        // 搜索岗位
+        function handleSearch() {
+            const companyName = document.getElementById('searchCompany').value.trim();
+            const jobTitle = document.getElementById('searchJob').value.trim();
+            const salary = document.getElementById('searchSalary').value.trim();
+
+            // 根据输入的搜索条件构建URL
+            let url = API_BASE_URL;
+            if (companyName) {
+                url = `${API_BASE_URL}/search/company?name=${encodeURIComponent(companyName)}`;
+            } else if (jobTitle) {
+                url = `${API_BASE_URL}/search/job?title=${encodeURIComponent(jobTitle)}`;
+            } else if (salary) {
+                url = `${API_BASE_URL}/search/salary?salary=${encodeURIComponent(salary)}`;
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    renderRoleTable(data);
+                })
+                .catch(error => {
+                    console.error('搜索岗位失败:', error);
+                    alert('搜索岗位失败，请稍后重试');
+                });
+        }
+
+        // 清空搜索
+        function clearSearch() {
+            document.getElementById('searchCompany').value = '';
+            document.getElementById('searchJob').value = '';
+            document.getElementById('searchSalary').value = '';
+            loadRoles(); // 重新加载所有岗位
+        }
+
+        // 关闭编辑模态框
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // 处理编辑模态框中的删除操作
+        function handleDeleteInEditModal() {
+            const id = document.getElementById('editId').value;
+            if (confirm('确定要删除这个岗位吗？删除后数据将无法恢复！')) {
+                deleteRole(id);
+                closeEditModal();
+            }
+        }
+
+        // 格式化日期时间
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return '';
+            const date = new Date(dateTimeString);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>
